@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/server';
 import { serveStdio } from '@modelcontextprotocol/server/stdio';
-import * as z from 'zod/v4';
+import * as z from 'zod';
 
 const ABR_BASE_URL = process.env.ABR_BASE_URL || 'http://localhost:8000';
 const ABR_API_KEY = process.env.ABR_API_KEY || '';
@@ -474,7 +474,7 @@ function createServer(): McpServer {
             description: 'Update indexer configuration values (admin only)',
             inputSchema: z.object({
                 indexer: z.string().describe('Indexer name'),
-                config: z.record(z.string()).describe('Key-value pairs of configuration to update'),
+                config: z.record(z.string(), z.string()).describe('Key-value pairs of configuration to update'),
             })
         },
         async ({ indexer, config }) => {
