@@ -12,7 +12,7 @@
 
 3. **Run the server**:
    ```bash
-   npx tsx src/index.ts
+   npx @spaghetgaming/audiobookrequest-mcp
    ```
 
 4. **Connect your MCP client** to the server.

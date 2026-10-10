@@ -47,16 +47,33 @@ export ABR_API_KEY=your-api-key-here
 
 ## Running the Server
 
-### Direct execution
+### Via npx (recommended)
 
 ```bash
-npx tsx src/index.ts
+ABR_BASE_URL=http://your-instance:8000 ABR_API_KEY=your-api-key npx @spaghetgaming/audiobookrequest-mcp
+```
+
+This runs the latest published version without installing anything locally.
+
+### Local development
+
+```bash
+# Clone or download this repository
+cd audiobookrequest-mcp
+
+# Install dependencies
+npm install
+
+# Run locally
+export ABR_BASE_URL=http://your-instance:8000
+export ABR_API_KEY=your-api-key
+npm start
 ```
 
 ### With the MCP Inspector (for testing)
 
 ```bash
-npx @modelcontextprotocol/inspector npx tsx src/index.ts
+npx @modelcontextprotocol/inspector npx @spaghetgaming/audiobookrequest-mcp
 ```
 
 This opens a web UI where you can test all tools interactively.
@@ -187,7 +204,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "audiobookrequest": {
       "command": "npx",
-      "args": ["tsx", "/path/to/audiobookrequest-mcp/src/index.ts"],
+      "args": ["@spaghetgaming/audiobookrequest-mcp"],
       "env": {
         "ABR_BASE_URL": "http://your-instance:8000",
         "ABR_API_KEY": "your-api-key"
@@ -207,7 +224,7 @@ Configure in your MCP settings:
     "audiobookrequest": {
       "type": "stdio",
       "command": "npx",
-      "args": ["tsx", "/path/to/audiobookrequest-mcp/src/index.ts"],
+      "args": ["@spaghetgaming/audiobookrequest-mcp"],
       "env": {
         "ABR_BASE_URL": "http://your-instance:8000",
         "ABR_API_KEY": "your-api-key"

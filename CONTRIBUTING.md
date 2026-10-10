@@ -19,7 +19,7 @@ npm start
 ## Testing with MCP Inspector
 
 ```bash
-npm run inspect
+npx @modelcontextprotocol/inspector npx @spaghetgaming/audiobookrequest-mcp
 ```
 
 This opens the MCP Inspector web UI where you can test all tools interactively.
