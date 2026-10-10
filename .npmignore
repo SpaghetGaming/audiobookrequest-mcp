@@ -1,0 +1,19 @@
+# Dev files
+tsconfig.json
+.editorconfig
+.npmignore
+.gitignore
+CONTRIBUTING.md
+USAGE.md
+EXAMPLES.md
+scripts/
+
+# Tests
+tests/
+__tests__/
+*.test.ts
+*.spec.ts
+
+# IDE
+.vscode/
+.idea/
