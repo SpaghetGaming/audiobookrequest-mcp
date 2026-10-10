@@ -1,13 +1,19 @@
 {
-  "name": "@spaghet/audiobookrequest-mcp",
+  "name": "@spaghetgaming/audiobookrequest-mcp",
   "version": "1.0.0",
   "description": "Model Context Protocol (MCP) server for AudioBookRequest - the lightweight audiobook request management tool for Plex/Audiobookshelf/Jellyfin.",
-  "main": "src/index.ts",
   "type": "module",
+  "main": "dist/index.js",
   "bin": {
-    "audiobookrequest-mcp": "src/index.ts"
+    "audiobookrequest-mcp": "dist/index.js"
   },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
+    "build": "tsc && node scripts/add-shebang.js",
     "start": "tsx src/index.ts",
     "inspect": "npx @modelcontextprotocol/inspector npx tsx src/index.ts"
   },
@@ -20,18 +26,20 @@
     "audiobookshelf",
     "jellyfin"
   ],
-  "author": "spaghet",
+  "author": "spaghetgaming",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spaghet/audiobookrequest-mcp.git"
+    "url": "https://github.com/spaghetgaming/audiobookrequest-mcp.git"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.10.1",
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "tsx": "^4.19.3"
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=20.0.0"
