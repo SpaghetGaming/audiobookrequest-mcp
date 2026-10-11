@@ -9,6 +9,11 @@ const TOOL_PREFIX = process.env.TOOL_PREFIX || '';
 function toolName(name: string): string {
     return TOOL_PREFIX ? `${TOOL_PREFIX}_${name}` : name;
 }
+const TOOL_PREFIX = process.env.TOOL_PREFIX || '';
+
+function toolName(name: string): string {
+    return TOOL_PREFIX ? `${TOOL_PREFIX}_${name}` : name;
+}
 
 async function abrRequest(endpoint: string, options: RequestInit = {}) {
     const url = `${ABR_BASE_URL}/api${endpoint}`;
