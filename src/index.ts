@@ -4,6 +4,11 @@ import * as z from 'zod';
 
 const ABR_BASE_URL = process.env.ABR_BASE_URL || 'http://localhost:8000';
 const ABR_API_KEY = process.env.ABR_API_KEY || '';
+const TOOL_PREFIX = process.env.TOOL_PREFIX || '';
+
+function toolName(name: string): string {
+    return TOOL_PREFIX ? `${TOOL_PREFIX}_${name}` : name;
+}
 
 async function abrRequest(endpoint: string, options: RequestInit = {}) {
     const url = `${ABR_BASE_URL}/api${endpoint}`;
@@ -30,7 +35,7 @@ function createServer(): McpServer {
 
     // Search for audiobooks
     server.registerTool(
-        'search_books',
+        toolName('search_books'),
         {
             description: 'Search for audiobooks by title, author, or narrator using the Audible API',
             inputSchema: z.object({
@@ -63,7 +68,7 @@ function createServer(): McpServer {
 
     // List all requests (wishlist)
     server.registerTool(
-        'list_requests',
+        toolName('list_requests'),
         {
             description: 'List all audiobook requests (wishlist). Optionally filter by download status.',
             inputSchema: z.object({
@@ -91,7 +96,7 @@ function createServer(): McpServer {
 
     // Get specific request details
     server.registerTool(
-        'get_request',
+        toolName('get_request'),
         {
             description: 'Get details of a specific audiobook request by ASIN',
             inputSchema: z.object({
@@ -114,7 +119,7 @@ function createServer(): McpServer {
 
     // Create a new request
     server.registerTool(
-        'request_book',
+        toolName('request_book'),
         {
             description: 'Create a new audiobook request by ASIN',
             inputSchema: z.object({
@@ -133,7 +138,7 @@ function createServer(): McpServer {
 
     // Cancel a request
     server.registerTool(
-        'cancel_request',
+        toolName('cancel_request'),
         {
             description: 'Cancel/delete an audiobook request by ASIN',
             inputSchema: z.object({
@@ -152,7 +157,7 @@ function createServer(): McpServer {
 
     // Mark as downloaded
     server.registerTool(
-        'mark_downloaded',
+        toolName('mark_downloaded'),
         {
             description: 'Mark a book as downloaded (admin only)',
             inputSchema: z.object({
@@ -171,7 +176,7 @@ function createServer(): McpServer {
 
     // Get download sources
     server.registerTool(
-        'get_download_sources',
+        toolName('get_download_sources'),
         {
             description: 'Get available download sources for a book from Prowlarr',
             inputSchema: z.object({
@@ -191,7 +196,7 @@ function createServer(): McpServer {
 
     // Download a book
     server.registerTool(
-        'download_book',
+        toolName('download_book'),
         {
             description: 'Start downloading a specific source for a book (admin only)',
             inputSchema: z.object({
@@ -215,7 +220,7 @@ function createServer(): McpServer {
 
     // Auto-download
     server.registerTool(
-        'auto_download',
+        toolName('auto_download'),
         {
             description: 'Start auto-download for a book (uses quality heuristics)',
             inputSchema: z.object({
@@ -234,7 +239,7 @@ function createServer(): McpServer {
 
     // List manual requests
     server.registerTool(
-        'list_manual_requests',
+        toolName('list_manual_requests'),
         {
             description: 'List all manual audiobook requests (not from Audible)',
             inputSchema: z.object({})
@@ -251,7 +256,7 @@ function createServer(): McpServer {
 
     // Create manual request
     server.registerTool(
-        'create_manual_request',
+        toolName('create_manual_request'),
         {
             description: 'Create a manual audiobook request (for books not on Audible)',
             inputSchema: z.object({
@@ -278,7 +283,7 @@ function createServer(): McpServer {
 
     // Update manual request
     server.registerTool(
-        'update_manual_request',
+        toolName('update_manual_request'),
         {
             description: 'Update a manual audiobook request',
             inputSchema: z.object({
@@ -306,7 +311,7 @@ function createServer(): McpServer {
 
     // Delete manual request
     server.registerTool(
-        'delete_manual_request',
+        toolName('delete_manual_request'),
         {
             description: 'Delete a manual audiobook request (admin only)',
             inputSchema: z.object({
@@ -325,7 +330,7 @@ function createServer(): McpServer {
 
     // Mark manual as downloaded
     server.registerTool(
-        'mark_manual_downloaded',
+        toolName('mark_manual_downloaded'),
         {
             description: 'Mark a manual request as downloaded (admin only)',
             inputSchema: z.object({
@@ -344,7 +349,7 @@ function createServer(): McpServer {
 
     // List users
     server.registerTool(
-        'list_users',
+        toolName('list_users'),
         {
             description: 'List all users (admin only)',
             inputSchema: z.object({
@@ -364,7 +369,7 @@ function createServer(): McpServer {
 
     // Get user
     server.registerTool(
-        'get_user',
+        toolName('get_user'),
         {
             description: 'Get details of a specific user (admin only)',
             inputSchema: z.object({
@@ -383,7 +388,7 @@ function createServer(): McpServer {
 
     // Create user
     server.registerTool(
-        'create_user',
+        toolName('create_user'),
         {
             description: 'Create a new user (admin only)',
             inputSchema: z.object({
@@ -409,7 +414,7 @@ function createServer(): McpServer {
 
     // Update user
     server.registerTool(
-        'update_user',
+        toolName('update_user'),
         {
             description: 'Update a user (admin only)',
             inputSchema: z.object({
@@ -433,7 +438,7 @@ function createServer(): McpServer {
 
     // Delete user
     server.registerTool(
-        'delete_user',
+        toolName('delete_user'),
         {
             description: 'Delete a user (admin only)',
             inputSchema: z.object({
@@ -452,7 +457,7 @@ function createServer(): McpServer {
 
     // Get indexer configurations
     server.registerTool(
-        'get_indexer_configurations',
+        toolName('get_indexer_configurations'),
         {
             description: 'Get configuration options for all indexers (admin only)',
             inputSchema: z.object({})
@@ -469,7 +474,7 @@ function createServer(): McpServer {
 
     // Update indexer
     server.registerTool(
-        'update_indexer',
+        toolName('update_indexer'),
         {
             description: 'Update indexer configuration values (admin only)',
             inputSchema: z.object({
@@ -492,7 +497,7 @@ function createServer(): McpServer {
 
     // Health check
     server.registerTool(
-        'health_check',
+        toolName('health_check'),
         {
             description: 'Check if the AudioBookRequest instance is healthy',
             inputSchema: z.object({})
