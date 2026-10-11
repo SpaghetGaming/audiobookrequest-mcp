@@ -38,6 +38,7 @@ Set the following environment variables:
 |----------|----------|-------------|
 | `ABR_BASE_URL` | Yes | Your AudioBookRequest instance URL (e.g., `http://localhost:8000`) |
 | `ABR_API_KEY` | Yes | Your AudioBookRequest API key |
+| `TOOL_PREFIX` | No | Optional prefix for all tool names (e.g., `audiobook` → `audiobook_search_books`) |
 
 Example:
 ```bash
