@@ -2,7 +2,7 @@
 
 A Model Context Protocol (MCP) server for [AudioBookRequest](https://github.com/markbeep/AudioBookRequest) — the lightweight audiobook request management tool for Plex/Audiobookshelf/Jellyfin.
 
-This MCP server exposes AudioBookRequest's REST API as MCP tools, allowing AI assistants to search for audiobooks, manage requests, track downloads, and administer your audiobook library.
+This MCP server exposes AudioBookRequest's REST API as MCP tools, allowing AI assistants to search for audiobooks, manage requests, track downloads, get recommendations, and administer your audiobook library.
 
 ## Features
 
@@ -11,8 +11,15 @@ This MCP server exposes AudioBookRequest's REST API as MCP tools, allowing AI as
 - ⬇️ Track and trigger downloads via Prowlarr
 - 👥 User management (create, update, delete users)
 - 📚 Manual request handling for non-Audible books
-- ⚙️ Indexer configuration management
 - 🏥 Health checks
+- ⚙️ Indexer configuration management
+- 📊 Recommendations (user-based, popular, recent, categories, authors, narrators)
+- 🔔 Notification configuration management
+- ⬇️ Download quality settings management
+- 📦 Instance settings management
+- 🎧 Audiobookshelf integration settings
+- 🔗 Prowlarr integration settings
+- 🔐 OpenID Connect settings
 
 ## Prerequisites
 
@@ -125,6 +132,38 @@ This opens a web UI where you can test all tools interactively.
 | `update_user` | Update a user |
 | `delete_user` | Delete a user |
 
+### Recommendations
+
+| Tool | Description |
+|------|-------------|
+| `get_user_recommendations` | Personalized recommendations based on user history |
+| `get_popular_recommendations` | Popular recommendations by request frequency |
+| `get_recent_recommendations` | Recently requested recommendations |
+| `get_fallback_recommendations` | Fallback popular recommendations from Audible |
+| `get_category_recommendations` | Recommendations by popular categories |
+| `get_author_recommendations` | Recommendations based on popular authors |
+| `get_narrator_recommendations` | Recommendations based on popular narrators |
+
+### Settings Management (Admin)
+
+| Tool | Description |
+|------|-------------|
+| `list_notifications` | List all notification configurations |
+| `create_notification` | Create or update a notification configuration |
+| `delete_notification` | Delete a notification configuration |
+| `test_notification` | Send a test notification |
+| `get_download_settings` | Get download and quality settings |
+| `update_download_settings` | Update download and quality settings |
+| `get_instance_settings` | Get instance settings |
+| `update_instance_settings` | Update instance settings |
+| `get_abs_settings` | Get Audiobookshelf integration settings |
+| `update_abs_settings` | Update Audiobookshelf integration settings |
+| `get_prowlarr_settings` | Get Prowlarr integration settings |
+| `update_prowlarr_settings` | Update Prowlarr integration settings |
+| `get_oidc_settings` | Get OpenID Connect settings |
+| `update_oidc_settings` | Update OpenID Connect settings |
+| `get_login_type` | Get current login type configuration |
+
 ### System
 
 | Tool | Description |
@@ -169,6 +208,17 @@ This opens a web UI where you can test all tools interactively.
 }
 ```
 
+### Get personalized recommendations
+
+```json
+{
+  "tool": "get_user_recommendations",
+  "arguments": {
+    "limit": 10
+  }
+}
+```
+
 ### Create a manual request
 
 ```json
@@ -190,6 +240,21 @@ This opens a web UI where you can test all tools interactively.
   "tool": "auto_download",
   "arguments": {
     "asin": "B08F3Z8QXV"
+  }
+}
+```
+
+### Configure notifications
+
+```json
+{
+  "tool": "create_notification",
+  "arguments": {
+    "name": "Discord Notifications",
+    "url": "https://discord.com/api/webhooks/...",
+    "event_type": "request_created",
+    "body": "{\"content\": \"New request: {{book.title}}\"}",
+    "body_type": "json"
   }
 }
 ```

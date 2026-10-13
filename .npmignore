@@ -1,19 +1,9 @@
-# Dev files
+node_modules
+src
+dist/*.map
+dist/*.d.ts
+dist/*.d.ts.map
+scripts
 tsconfig.json
-.editorconfig
-.npmignore
-.gitignore
-CONTRIBUTING.md
-USAGE.md
-EXAMPLES.md
-scripts/
-
-# Tests
-tests/
-__tests__/
-*.test.ts
-*.spec.ts
-
-# IDE
-.vscode/
-.idea/
+.npm
+.git
