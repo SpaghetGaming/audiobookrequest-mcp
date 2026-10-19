@@ -1,6 +1,6 @@
 {
   "name": "@spaghetgaming/audiobookrequest-mcp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Model Context Protocol (MCP) server for AudioBookRequest - the lightweight audiobook request management tool for Plex/Audiobookshelf/Jellyfin.",
   "type": "module",
   "main": "dist/index.js",
