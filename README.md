@@ -77,7 +77,15 @@ export ABR_API_KEY=your-api-key
 npm start
 ```
 
-### With the MCP Inspector (for testing)
+### Validate API Endpoints
+
+To verify that all MCP tools match the AudioBookRequest OpenAPI spec:
+
+```bash
+npm run validate:endpoints
+```
+
+This fetches the OpenAPI spec from your instance and validates all 43 endpoints.
 
 ```bash
 npx @modelcontextprotocol/inspector npx @spaghetgaming/audiobookrequest-mcp

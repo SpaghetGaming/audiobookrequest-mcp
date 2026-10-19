@@ -15,7 +15,8 @@
   "scripts": {
     "build": "tsc && node scripts/add-shebang.js",
     "start": "tsx src/index.ts",
-    "inspect": "npx @modelcontextprotocol/inspector npx tsx src/index.ts"
+    "inspect": "npx @modelcontextprotocol/inspector npx tsx src/index.ts",
+    "validate:endpoints": "tsx scripts/validate-endpoints.ts"
   },
   "keywords": [
     "mcp",
