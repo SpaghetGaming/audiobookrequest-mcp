@@ -32,31 +32,6 @@ export function registerRequestTools(server: McpServer, client: AudioBookRequest
         }
     );
 
-    // Get specific request (FIXED: use direct endpoint)
-    server.registerTool(
-        toolName(prefix, 'get_request'),
-        {
-            description: 'Get details of a specific audiobook request by ASIN',
-            inputSchema: z.object({
-                asin: z.string().describe('ASIN or UUID of the book'),
-            })
-        },
-        async ({ asin }) => {
-            try {
-                const request = await client.get(`/requests/${asin}`);
-                if (!request) {
-                    return { content: [{ type: 'text', text: `No request found for ASIN ${asin}` }] };
-                }
-                return { content: [{ type: 'text', text: JSON.stringify(request, null, 2) }] };
-            } catch (e: any) {
-                if (e.status === 404) {
-                    return { content: [{ type: 'text', text: `No request found for ASIN ${asin}` }] };
-                }
-                return { content: [{ type: 'text', text: `Error getting request: ${e.message}` }], isError: true };
-            }
-        }
-    );
-
     // Create request
     server.registerTool(
         toolName(prefix, 'request_book'),

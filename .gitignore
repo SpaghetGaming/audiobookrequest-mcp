@@ -9,6 +9,7 @@ build/
 .env
 .env.local
 .env.*.local
+test-tools.ts
 
 # Logs
 logs/
@@ -35,3 +36,6 @@ coverage/
 # Temp
 tmp/
 temp/
+
+#Issues
+issues/

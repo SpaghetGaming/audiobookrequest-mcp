@@ -62,8 +62,16 @@ export interface NotificationSettings {
 }
 
 export interface DownloadSettings {
-    auto_download_enabled: boolean;
-    quality_heuristics?: Record<string, string>;
+    auto_download?: boolean;
+    flac_range?: { from_kbits?: number; to_kbits?: number };
+    m4b_range?: { from_kbits?: number; to_kbits?: number };
+    mp3_range?: { from_kbits?: number; to_kbits?: number };
+    unknown_audio_range?: { from_kbits?: number; to_kbits?: number };
+    unknown_range?: { from_kbits?: number; to_kbits?: number };
+    min_seeders?: number;
+    name_ratio?: number;
+    title_ratio?: number;
+    indexer_flags?: any[];
 }
 
 export interface InstanceSettings {
@@ -72,25 +80,33 @@ export interface InstanceSettings {
 }
 
 export interface AudiobookshelfSettings {
-    abs_enabled: boolean;
-    abs_url?: string;
-    abs_token?: string;
-    abs_library?: string;
+    abs_base_url?: string;
+    abs_api_token?: string;
+    abs_library_id?: string;
+    abs_check_downloaded?: boolean;
+    abs_libraries?: any[];
 }
 
-export interface OIDCSettings {
-    oidc_enabled: boolean;
-    oidc_issuer?: string;
+export interface SecuritySettings {
+    login_type?: 'local' | 'oidc';
+    access_token_expiry?: number;
+    min_password_length?: number;
+    oidc_endpoint?: string;
     oidc_client_id?: string;
     oidc_client_secret?: string;
+    oidc_scope?: string;
+    oidc_username_claim?: string;
+    oidc_group_claim?: string;
+    oidc_redirect_scheme?: string;
+    oidc_logout_url?: string;
+    force_login_type?: string | null;
 }
 
 export interface ProwlarrSettings {
-    prowlarr_enabled: boolean;
-    prowlarr_url?: string;
-    prowlarr_api_key?: string;
-}
-
-export interface LoginType {
-    login_type: string;
+    base_url?: string;
+    api_key?: string;
+    selected_categories?: any[];
+    selected_indexers?: any[];
+    all_categories?: Record<string, string>;
+    indexers?: any;
 }

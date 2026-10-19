@@ -16,10 +16,9 @@ This MCP server exposes AudioBookRequest's REST API as MCP tools, allowing AI as
 - 📊 Recommendations (user-based, popular, recent, categories, authors, narrators)
 - 🔔 Notification configuration management
 - ⬇️ Download quality settings management
-- 📦 Instance settings management
 - 🎧 Audiobookshelf integration settings
 - 🔗 Prowlarr integration settings
-- 🔐 OpenID Connect settings
+- 🔐 Security settings (OIDC, login type)
 
 ## Prerequisites
 
@@ -93,7 +92,6 @@ This opens a web UI where you can test all tools interactively.
 | Tool | Description |
 |------|-------------|
 | `search_books` | Search for audiobooks by title, author, or narrator |
-| `get_request` | Get details of a specific request by ASIN |
 
 ### Request Management
 
@@ -154,15 +152,12 @@ This opens a web UI where you can test all tools interactively.
 | `test_notification` | Send a test notification |
 | `get_download_settings` | Get download and quality settings |
 | `update_download_settings` | Update download and quality settings |
-| `get_instance_settings` | Get instance settings |
-| `update_instance_settings` | Update instance settings |
 | `get_abs_settings` | Get Audiobookshelf integration settings |
 | `update_abs_settings` | Update Audiobookshelf integration settings |
 | `get_prowlarr_settings` | Get Prowlarr integration settings |
 | `update_prowlarr_settings` | Update Prowlarr integration settings |
-| `get_oidc_settings` | Get OpenID Connect settings |
-| `update_oidc_settings` | Update OpenID Connect settings |
-| `get_login_type` | Get current login type configuration |
+| `get_security_settings` | Get security settings (OIDC, login type) |
+| `update_security_settings` | Update security settings (OIDC, login type) |
 
 ### System
 

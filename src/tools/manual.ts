@@ -14,7 +14,13 @@ export function registerManualRequestTools(server: McpServer, client: AudioBookR
         async () => {
             try {
                 const results = await client.get('/requests/manual');
-                return { content: [{ type: 'text', text: JSON.stringify(results, null, 2) }] };
+                // Map API response to expected format (authors[]/narrators[] → author/narrator)
+                const mapped = results.map((r: any) => ({
+                    ...r,
+                    author: r.authors?.join(', ') || '',
+                    narrator: r.narrators?.join(', ') || '',
+                }));
+                return { content: [{ type: 'text', text: JSON.stringify(mapped, null, 2) }] };
             } catch (e: any) {
                 return { content: [{ type: 'text', text: `Error listing manual requests: ${e.message}` }], isError: true };
             }

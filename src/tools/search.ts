@@ -16,8 +16,10 @@ export function registerSearchTools(server: McpServer, client: AudioBookRequestC
         },
         async ({ query, num_results, page }) => {
             try {
+                // Clamp num_results to max 100
+                const clampedNumResults = Math.min(num_results, 100);
                 const results = await client.get(
-                    `/search?q=${encodeURIComponent(query)}&num_results=${num_results}&page=${page}`
+                    `/search?q=${encodeURIComponent(query)}&page_size=${clampedNumResults}&page=${page}`
                 );
                 const books = results.map((r: any) => ({
                     title: r.book.title,
