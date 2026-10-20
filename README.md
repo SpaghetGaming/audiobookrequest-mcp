@@ -82,10 +82,10 @@ npm start
 To verify that all MCP tools match the AudioBookRequest OpenAPI spec:
 
 ```bash
-npm run validate:endpoints
+ABR_BASE_URL=http://your-instance:8000 npm run validate:endpoints
 ```
 
-This fetches the OpenAPI spec from your instance and validates all 43 endpoints.
+This fetches the spec from `ABR_BASE_URL`, compares every registered tool's schema with it, then invokes each tool against an in-process recording stub and validates the real HTTP method, path, query parameters, body fields, enums and required fields. It never writes to your instance.
 
 ```bash
 npx @modelcontextprotocol/inspector npx @spaghetgaming/audiobookrequest-mcp
@@ -255,7 +255,7 @@ This opens a web UI where you can test all tools interactively.
   "arguments": {
     "name": "Discord Notifications",
     "url": "https://discord.com/api/webhooks/...",
-    "event_type": "request_created",
+    "event_type": "onNewRequest",
     "body": "{\"content\": \"New request: {{book.title}}\"}",
     "body_type": "json"
   }

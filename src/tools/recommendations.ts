@@ -17,11 +17,14 @@ export function registerRecommendationTools(server: McpServer, client: AudioBook
         },
         async ({ seed_asins, limit, offset }) => {
             try {
-                let endpoint = `/recommendations/user?limit=${limit}&offset=${offset}`;
-                if (seed_asins && seed_asins.length > 0) {
-                    endpoint += '&seed_asins=' + seed_asins.join(',');
+                const params = new URLSearchParams({
+                    limit: String(limit),
+                    offset: String(offset),
+                });
+                for (const asin of seed_asins ?? []) {
+                    params.append('seed_asins', asin);
                 }
-                const results = await client.get(endpoint);
+                const results = await client.get(`/recommendations/user?${params}`);
                 return { content: [{ type: 'text', text: JSON.stringify(results, null, 2) }] };
             } catch (e: any) {
                 return { content: [{ type: 'text', text: `Error getting user recommendations: ${e.message}` }], isError: true };

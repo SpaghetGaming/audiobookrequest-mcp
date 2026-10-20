@@ -156,15 +156,6 @@ List all audiobook requests.
 
 **Returns:** List of requests with book details and requesters.
 
-### get_request
-
-Get details of a specific request.
-
-**Parameters:**
-- `asin` (string, required): ASIN of the book
-
-**Returns:** Full request details including book info and download status.
-
 ### request_book
 
 Create a new audiobook request.
@@ -342,7 +333,7 @@ Update indexer configuration (admin only).
 
 **Parameters:**
 - `indexer` (string, required): Indexer name
-- `config` (object, required): Key-value pairs of configuration to update
+- `config` (object, required): Configuration values by key; use the types reported by `get_indexer_configurations`
 
 **Returns:** Confirmation of update.
 
