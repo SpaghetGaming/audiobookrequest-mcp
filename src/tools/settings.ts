@@ -37,20 +37,21 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
     server.registerTool(
         toolName(prefix, 'create_notification'),
         {
-            description: 'Create or update a notification configuration (admin only). WARNING: Allows registering arbitrary webhooks - use with trusted URLs only.',
+            description: 'Create or update a notification configuration (admin only). Set id to update an existing notification. WARNING: Allows registering arbitrary webhooks - use with trusted URLs only.',
             inputSchema: z.object({
+                id: z.string().optional().describe('Notification UUID; set to update an existing notification'),
                 name: z.string().describe('Notification name'),
                 url: z.string().describe('Notification webhook URL'),
-                event_type: z.string().describe('Event type (e.g., request_created, download_completed)'),
+                event_type: z.enum(['onNewRequest', 'onSuccessfulDownload', 'onFailedDownload']).describe('Event that triggers the notification'),
                 body: z.string().describe('Notification body template'),
-                body_type: z.enum(['json', 'form']).describe('Body type'),
+                body_type: z.enum(['json', 'text']).describe('Body type'),
                 headers: z.string().optional().default('{}').describe('JSON headers'),
             })
         },
-        async ({ name, url, event_type, body, body_type, headers }) => {
+        async ({ id, name, url, event_type, body, body_type, headers }) => {
             try {
                 const result = await client.post('/settings/notifications', {
-                    name, url, event_type, body, body_type, headers,
+                    id, name, url, event_type, body, body_type, headers,
                 });
                 return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
             } catch (e: any) {
@@ -105,19 +106,7 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
         async () => {
             try {
                 const results = await client.get('/settings/download');
-                // Map API response to expected format
-                const mapped = {
-                    auto_download: results.auto_download,
-                    flac_range: results.flac_range,
-                    m4b_range: results.m4b_range,
-                    mp3_range: results.mp3_range,
-                    unknown_audio_range: results.unknown_audio_range,
-                    unknown_range: results.unknown_range,
-                    min_seeders: results.min_seeders,
-                    name_ratio: results.name_ratio,
-                    title_ratio: results.title_ratio,
-                };
-                return { content: [{ type: 'text', text: JSON.stringify(mapped, null, 2) }] };
+                return { content: [{ type: 'text', text: JSON.stringify(results, null, 2) }] };
             } catch (e: any) {
                 return { content: [{ type: 'text', text: `Error getting download settings: ${e.message}` }], isError: true };
             }
@@ -142,7 +131,23 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
         },
         async (settings) => {
             try {
-                await client.patch('/settings/download', settings);
+                const current: Record<string, unknown> = await client.get('/settings/download');
+                const payload: Record<string, unknown> = { ...current };
+                delete payload.indexer_flags;
+                for (const [key, value] of Object.entries(settings)) {
+                    if (value === undefined) continue;
+                    // Nested quality ranges must keep their other bound.
+                    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                        const existing = current[key];
+                        payload[key] = {
+                            ...(typeof existing === 'object' && existing !== null ? existing : {}),
+                            ...value,
+                        };
+                    } else {
+                        payload[key] = value;
+                    }
+                }
+                await client.patch('/settings/download', payload);
                 return { content: [{ type: 'text', text: 'Download settings updated' }] };
             } catch (e: any) {
                 return { content: [{ type: 'text', text: `Error updating download settings: ${e.message}` }], isError: true };
@@ -187,16 +192,16 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
             try {
                 // Backend uses per-field PUT endpoints
                 if (abs_base_url !== undefined) {
-                    await client.put('/settings/audiobookshelf/base-url', { value: abs_base_url });
+                    await client.put('/settings/audiobookshelf/base-url', { base_url: abs_base_url });
                 }
                 if (abs_api_token !== undefined) {
-                    await client.put('/settings/audiobookshelf/api-token', { value: abs_api_token });
+                    await client.put('/settings/audiobookshelf/api-token', { api_token: abs_api_token });
                 }
                 if (abs_library_id !== undefined) {
-                    await client.put('/settings/audiobookshelf/library', { value: abs_library_id });
+                    await client.put('/settings/audiobookshelf/library', { library_id: abs_library_id });
                 }
                 if (abs_check_downloaded !== undefined) {
-                    await client.put('/settings/audiobookshelf/check-downloaded', { value: abs_check_downloaded });
+                    await client.put('/settings/audiobookshelf/check-downloaded', { check_downloaded: abs_check_downloaded });
                 }
                 return { content: [{ type: 'text', text: 'Audiobookshelf settings updated' }] };
             } catch (e: any) {
@@ -215,11 +220,8 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
         async () => {
             try {
                 const results = await client.get('/settings/prowlarr');
-                // Map API response to expected format and mask the API key for security
-                const masked = {
-                    base_url: results.base_url,
-                    api_key: maskSecret(results.api_key),
-                };
+                // Mask the API key for security
+                const masked = { ...results, api_key: maskSecret(results.api_key) };
                 return { content: [{ type: 'text', text: JSON.stringify(masked, null, 2) }] };
             } catch (e: any) {
                 return { content: [{ type: 'text', text: `Error getting Prowlarr settings: ${e.message}` }], isError: true };
@@ -240,10 +242,10 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
             try {
                 // Backend uses per-field PUT endpoints
                 if (base_url !== undefined) {
-                    await client.put('/settings/prowlarr/base-url', { value: base_url });
+                    await client.put('/settings/prowlarr/base-url', { base_url });
                 }
                 if (api_key !== undefined) {
-                    await client.put('/settings/prowlarr/api-key', { value: api_key });
+                    await client.put('/settings/prowlarr/api-key', { api_key });
                 }
                 return { content: [{ type: 'text', text: 'Prowlarr settings updated' }] };
             } catch (e: any) {
@@ -279,14 +281,14 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
         {
             description: 'Update security settings including OIDC and login type (admin only)',
             inputSchema: z.object({
-                login_type: z.enum(['local', 'oidc']).optional().describe('Login type: local or oidc'),
+                login_type: z.enum(['basic', 'forms', 'oidc']).optional().describe('Login type'),
                 oidc_endpoint: z.string().optional().describe('OIDC discovery endpoint URL'),
                 oidc_client_id: z.string().optional().describe('OIDC client ID'),
                 oidc_client_secret: z.string().optional().describe('OIDC client secret'),
                 oidc_scope: z.string().optional().describe('OIDC scope'),
                 oidc_username_claim: z.string().optional().describe('OIDC username claim'),
                 oidc_group_claim: z.string().optional().describe('OIDC group claim'),
-                oidc_redirect_scheme: z.string().optional().describe('OIDC redirect scheme'),
+                oidc_redirect_scheme: z.enum(['http', 'https', 'auto']).optional().describe('OIDC redirect scheme'),
                 oidc_logout_url: z.string().optional().describe('OIDC logout URL'),
                 access_token_expiry: z.number().optional().describe('Access token expiry in minutes'),
                 min_password_length: z.number().optional().describe('Minimum password length'),
@@ -294,7 +296,14 @@ export function registerSettingsTools(server: McpServer, client: AudioBookReques
         },
         async (settings) => {
             try {
-                await client.patch('/settings/security', settings);
+                // The API requires login_type on every patch, so merge with current values.
+                const current: Record<string, unknown> = await client.get('/settings/security');
+                const payload: Record<string, unknown> = { ...current };
+                delete payload.force_login_type;
+                for (const [key, value] of Object.entries(settings)) {
+                    if (value !== undefined) payload[key] = value;
+                }
+                await client.patch('/settings/security', payload);
                 return { content: [{ type: 'text', text: 'Security settings updated' }] };
             } catch (e: any) {
                 return { content: [{ type: 'text', text: `Error updating security settings: ${e.message}` }], isError: true };
