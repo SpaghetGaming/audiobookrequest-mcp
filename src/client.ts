@@ -4,7 +4,7 @@ export class AudioBookRequestClient {
     private config: Config;
 
     constructor(config: Config) {
-        this.config = config;
+        this.config = { ...config, baseUrl: config.baseUrl.replace(/\/+$/, '') };
     }
 
     async request(endpoint: string, options: RequestInit = {}) {
@@ -16,7 +16,14 @@ export class AudioBookRequestClient {
         };
 
         try {
-            const response = await fetch(url, { ...options, headers });
+            const response = await fetch(url, { redirect: 'manual', ...options, headers });
+
+            if (response.status >= 300 && response.status < 400) {
+                throw new ABRClientError(
+                    `ABR API redirected (${response.status}) to ${response.headers.get('location') ?? 'unknown'}; check ABR_BASE_URL and your API key`,
+                    response.status
+                );
+            }
 
             if (!response.ok) {
                 const errorBody = await response.text().catch(() => '');
@@ -28,7 +35,14 @@ export class AudioBookRequestClient {
 
             const text = await response.text();
             if (!text) return null;
-            return JSON.parse(text);
+            try {
+                return JSON.parse(text);
+            } catch {
+                throw new ABRClientError(
+                    `ABR API returned non-JSON from ${endpoint}: ${text.slice(0, 200)}`,
+                    response.status
+                );
+            }
         } catch (e) {
             if (e instanceof ABRClientError) throw e;
             throw new ABRClientError(`Failed to connect to AudioBookRequest at ${this.config.baseUrl}: ${e}`);

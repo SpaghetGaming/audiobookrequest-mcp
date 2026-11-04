@@ -16,6 +16,15 @@ export ABR_API_KEY=your-api-key
 npm start
 ```
 
+## Validating Endpoints
+
+```bash
+export ABR_BASE_URL=http://your-instance:8000
+npm run validate:endpoints
+```
+
+This checks every registered tool against the instance's OpenAPI spec and exercises the real HTTP calls against a recording stub.
+
 ## Testing with MCP Inspector
 
 ```bash
@@ -59,8 +68,9 @@ npm publish
 2. Create a Zod schema for input parameters
 3. Register the tool using `server.registerTool()`
 4. Implement the handler with proper error handling
-5. Test with the MCP Inspector
-6. Update documentation (README.md, USAGE.md, EXAMPLES.md)
+5. Add the tool to `TOOL_CALLS` and `INVOCATIONS` in `scripts/validate-endpoints.ts`
+6. Run `npx tsc --noEmit` and `npm run validate:endpoints`
+7. Update documentation (README.md, USAGE.md, EXAMPLES.md)
 
 ## License
 

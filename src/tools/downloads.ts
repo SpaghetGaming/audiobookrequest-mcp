@@ -8,7 +8,7 @@ export function registerDownloadTools(server: McpServer, client: AudioBookReques
     server.registerTool(
         toolName(prefix, 'get_download_sources'),
         {
-            description: 'Get available download sources for a book from Prowlarr',
+            description: 'Get available download sources for a book from Prowlarr (admin only)',
             inputSchema: z.object({
                 asin: z.string().describe('ASIN of the book'),
                 only_cached: z.boolean().optional().default(false).describe('Only return cached results'),
@@ -49,7 +49,7 @@ export function registerDownloadTools(server: McpServer, client: AudioBookReques
     server.registerTool(
         toolName(prefix, 'auto_download'),
         {
-            description: 'Start auto-download for a book using quality heuristics',
+            description: 'Start auto-download for a book using quality heuristics (trusted or admin only)',
             inputSchema: z.object({
                 asin: z.string().describe('ASIN of the book'),
             })

@@ -28,7 +28,7 @@ export function registerIndexerTools(server: McpServer, client: AudioBookRequest
             description: 'Update indexer configuration values (admin only)',
             inputSchema: z.object({
                 indexer: z.string().describe('Indexer name'),
-                config: z.record(z.string(), z.string()).describe('Key-value pairs of configuration to update'),
+                config: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).describe('Configuration values by key; use the types reported by get_indexer_configurations'),
             })
         },
         async ({ indexer, config }) => {
